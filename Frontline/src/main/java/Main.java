@@ -1,28 +1,41 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        First first = new First();
-        //int[] input = {1,2,3,2,10,1,2,3,4,5};
-        int[] input = {1,2,3,4,5,6,9,10,2,10};
-       //int[] input = {5, 6, 3, 0, 7, 8, 9, 1, 2};
-       Arrays.stream(first.monotoneIncArray(input)).forEach(System.out::println);
+        int[] input = {1, 2, 3, 4, 5, 6, 2, 10, 2, 10};
+        int n = input.length;
+        Monotone monotone = new Monotone();
+        int[] out = monotone.monotoneLongestIncSubArr(input, n);
+        System.out.println("print Monotone sub Array from input in line 6");
+        Arrays.stream(out).forEach(System.out::println);
+        System.out.println("print length of sub Array");
+        Arrays.stream(new int[]{out.length}).forEach(System.out::println);
 
         System.out.println("<------------------>>");
-        Second second = new Second();
-        second.printTree(new ArrayList<>(){
-            {
-                add("1.2.3");
-                add("1.2.5");
-                add("1.5.6");
-                add("1.2.4");
-                add("2.5.6");
-                add("1.5.7");
-                add("2.5.3");
-            }
-        });
+        int[] array = {1, 2, 3, 4, 5, 6, 2, 10, 2, 10};
+        MontoneSubArray montoneSubArray = new MontoneSubArray();
+        int[] response = montoneSubArray.monotoneIncArray(array);
+        System.out.println("print Monotone sub Array from input in line 22");
+        Arrays.stream(response).forEach(System.out::println);
+        System.out.println("print length of sub Array");
+        Arrays.stream(new int[]{response.length}).forEach(System.out::println);
 
+        System.out.println("<------------------>>");
+        System.out.println("print Tree structure for below");
+        List<String> treeInput = new ArrayList<>();
+        treeInput.add("1.2.3");
+        treeInput.add("1.2.5");
+        treeInput.add("1.5.6");
+        treeInput.add("1.2.4");
+        treeInput.add("2.5.6");
+        treeInput.add("1.5.7");
+        treeInput.add("2.5.3");
+        System.out.println("Test case : tree: " + treeInput);
+        Tree tree = new Tree();
+        tree.addNodes(treeInput);
+        tree.display();
     }
 }

@@ -1,68 +1,116 @@
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Tree {
+class Node {
 
-    public void printTree(List<String> input){
+    int value;
+    Map<Integer, Node> children = new TreeMap<>();
+    int level;
 
-        Map<Integer, Map<Integer,Set<Integer>>> map = new TreeMap<>();
-
-        input.stream()
-                .map(x -> x.split(Pattern.quote(".")))
-                .forEach(arr -> {
-                        if(!map.containsKey(Integer.parseInt(arr[0]))){
-                            Map<Integer,Set<Integer>> sortedMap = new TreeMap<>();
-                            updateChildMap(arr, sortedMap);
-                            map.put(Integer.valueOf(arr[0]), sortedMap);
-                        }else{
-                            Map<Integer,Set<Integer>> sMap = map.get(Integer.parseInt(arr[0]));
-                            if(sMap.containsKey(Integer.parseInt(arr[1]))){
-                                sMap.get(Integer.parseInt(arr[1])).add(Integer.parseInt(arr[2]));
-                            }else{
-                                updateChildMap(arr, sMap);
-                            }
-                        }
-        });
-
-        map.forEach((key1, value1) -> {
-            System.out.println(key1);
-            value1.forEach((key, value) -> {
-                System.out.println("--" + key);
-                value.forEach(integer -> System.out.println("---" + integer));
-            });
-        });
-
-
-
-       /*
-       If below code is complete , it will be the most optimized way
-       Map<Integer, Map<Integer,Set<Integer>>> map2 = input.stream().map(x -> x.split(Pattern.quote("."))).map(y -> {
-            Map<Integer, Map<Integer,Set<Integer>>> map1 = new TreeMap<>();
-            Integer.parseInt(y[0]);
-            {
-                Map<Integer,Set<Integer>> sortedMap = new TreeMap<>();
-                Set<Integer> set = new TreeSet<>();
-                set.add(Integer.parseInt(y[2]));
-                sortedMap.put(Integer.parseInt(y[1]),set);
-                map1.put(Integer.valueOf(y[0]), sortedMap);
-            }
-            return map1;
-        }).peek(System.out::println).reduce((integerMapMap, integerMapMap2) ->
-        // Need to rethink new merge logic , below concat fails
-                Stream.concat(integerMapMap.entrySet().stream(), integerMapMap2.entrySet().stream()).collect(
-                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).get();
-        System.out.println(map2);
-        */
-
-
-
+    /**
+     *
+     * It is a constructor.
+     *
+     * @param value  The value to put in the list.
+     * @param level  The level of the element in list.
+     */
+    public Node(int value, int level) {
+        this.value = value;
+        this.level = level;
     }
 
-    private void updateChildMap(String[] arr, Map<Integer, Set<Integer>> sMap) {
-        Set<Integer> set = new TreeSet<>();
-        set.add(Integer.parseInt(arr[2]));
-        sMap.put(Integer.parseInt(arr[1]), set);
+    public Map<Integer, Node> getChildren() {
+        return this.children;
     }
 
+    /**
+     *
+     * It is a constructor.
+     *
+     * @param value  The value to put in the list.
+     * @param level  The level of the element in list.
+     */
+    public Node addChild(int value, int level) {
+        Node node;
+        if (children.containsKey(value)) {
+            node = children.get(value);
+        } else {
+            node = new Node(value, level);
+            children.put(value, node);
+        }
+        return node;
+    }
 
+    public void print() {
+        display(this);
+    }
+
+    private void display(Node node) {
+        IntStream stream = IntStream.range(0, node.level);
+        stream.forEach(x ->
+                System.out.print("--"));
+        System.out.println(node.value);
+        node.getChildren()
+                .entrySet()
+                .stream()
+                .forEach(child ->
+                        display(child.getValue()));
+
+    }
 }
+
+class Tree {
+    private Map<Integer, Node> nodes = new TreeMap<>();
+
+    public Map<Integer, Node> getNodes() {
+        return this.nodes;
+
+    }
+
+    /**
+     *
+     * It is a constructor.
+     *
+     * @param list  the list
+     */
+    public void addNodes(List<String> list) {
+        list.stream()
+                .map(inputRecord -> Arrays.stream(inputRecord.split("\\."))
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList())).forEach(arr -> addNode(arr));
+    }
+
+    /**
+     *
+     * It is a constructor.
+     *
+     * @param lsElement  the ls element
+     */
+    private void addNode(List<Integer> lsElement) {
+        Node node;
+        Integer firstElement = lsElement.get(0);
+        if (nodes.containsKey(firstElement)) {
+            node = nodes.get(firstElement);
+        } else {
+            node = new Node(firstElement, 0);
+            nodes.put(firstElement, node);
+        }
+        for (int i = 1; i < lsElement.size(); i++) {
+            node = node.addChild(lsElement.get(i), i);
+        }
+    }
+    public void display() {
+        this.nodes.entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .forEach(Node::print);
+
+    }
+}
+
+
+
