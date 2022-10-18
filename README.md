@@ -22,8 +22,8 @@ How to execute and see the output:
 
 ###### Monotone sub Array 
 1) Input array = {1, 2, 3, 4, 5, 6, 2, 10, 2, 10}
-2) output = {1, 2, 3, 4, 5, 6}
-3) output length = 6
+2) output = {1, 2, 3, 4, 5, 6, 10}
+3) output length = 7
 
 
 ###### Tree structure 
